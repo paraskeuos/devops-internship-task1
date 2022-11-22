@@ -43,3 +43,5 @@ I went to the mentioned page, selected New SSH key, named it and pasted the cont
 
 In order to clone the repository via SSH using a specific key, I typed <code>git config --global core.sshCommand 'ssh -i github_key'</code> (global for the time being since I hadn't cloned the repository to begin with), github_key being the newly made private key.
 Then I proceeded with cloning the repository to my machine by typing <code>git clone git@github.com:paraskeuos/devops-internship-task1.git</code>.
+
+Later on, I recalled that I could have added the new key to the ssh-agent with the ssh-add command and cloned the repository without changing global git configuration, so I deleted the core.sshcommand line from git config and currently use the access method just mentioned.
