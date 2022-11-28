@@ -12,5 +12,5 @@
     
     - name: Run Jenkins container
       ansible.builtin.shell:
-        cmd: "docker run -d -p 7000:8080 -v jenkins_data:/var/jenkins_home jenkins/jenkins:lts-jdk11"
+        cmd: "docker run -d -p 7000:8080 -v jenkins_data:/var/jenkins_home jenkins/jenkins:lts-jdk11 &"
         
