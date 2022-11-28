@@ -1,2 +1,2 @@
 # devops-internship-task1
-Repository for task #1 during DevOps internship at Endava
+Repository for tasks during DevOps internship at Endava
