@@ -1,0 +1,29 @@
+- hosts: jenkins
+  vars:
+    dl_dest: "/var/jenkins_war"
+    work_dir: "/etc/jenkins_war"
+  become: true
+  tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+    
+    - name: Install Java
+      ansible.builtin.apt:
+        name: openjdk-11-jre
+        state: present
+
+    - name: Create download directory
+      ansible.builtin.file:
+        path: "{{ dl_dest }}"
+        state: directory
+
+    - name: Download jenkins.war
+      ansible.builtin.get_url:
+        url: "https://get.jenkins.io/war-stable/2.361.4/jenkins.war"
+        dest: "{{ dl_dest }}/jenkins.war"
+
+    - name: Start Jenkins
+      ansible.builtin.shell:
+        chdir: "{{ dl_dest }}"
+        cmd: JENKINS_HOME={{ work_dir }} java -jar jenkins.war --httpPort=5000 &
