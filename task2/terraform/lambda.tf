@@ -9,7 +9,7 @@ data "archive_file" "py_lambda_start_ec2" {
 resource "aws_lambda_function" "lambda_start_ec2" {
   function_name = "LambdaStartEC2"
   filename = "src/ec2_start.zip"
-  source_code_hash = filebase64sha256("src/ec2_start.zip")
+  source_code_hash = filebase64sha256("src/start_instance.py")
   role = aws_iam_role.iam_lambda.arn
   runtime = "python3.9"
   handler = "start_instance.lambda_handler"
@@ -39,7 +39,7 @@ data "archive_file" "py_lambda_stop_ec2" {
 resource "aws_lambda_function" "lambda_stop_ec2" {
   function_name = "LambdaStopEC2"
   filename = "src/ec2_stop.zip"
-  source_code_hash = filebase64sha256("src/ec2_stop.zip")
+  source_code_hash = filebase64sha256("src/stop_instance.py")
   role = aws_iam_role.iam_lambda.arn
   runtime = "python3.9"
   handler = "stop_instance.lambda_handler"
