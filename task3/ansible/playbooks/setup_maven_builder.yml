@@ -1,0 +1,11 @@
+- hosts: maven
+  become: true
+  tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Install maven
+      ansible.builtin.apt:
+        name: maven
+        state: present
