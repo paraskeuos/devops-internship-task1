@@ -1,5 +1,8 @@
-- hosts: jenkins
+- hosts: jenkins_controller
   become: true
+  vars: {
+    jenkins_ssh_dir: '/var/lib/jenkins/.ssh'
+  }
   tasks:
     - name: Get jenkins apt key
       ansible.builtin.apt_key:
@@ -30,3 +33,16 @@
         name: jenkins
         enabled: true
         state: started
+
+    - name: Create Jenkins SSH dir
+      ansible.builtin.file:
+        path: '{{ jenkins_ssh_dir }}'
+        state: directory
+
+    - name: Recognize maven builder as known host
+      ansible.builtin.shell:
+        cmd: 'runuser -u jenkins -- ssh-keyscan {{ hostvars["maven"].ansible_host }} >> {{ jenkins_ssh_dir }}/known_hosts'
+
+    - name: Recognize dotnet builder as known host
+      ansible.builtin.shell:
+        cmd: 'runuser -u jenkins -- ssh-keyscan {{ hostvars["dotnet"].ansible_host }} >> {{ jenkins_ssh_dir }}/known_hosts'
