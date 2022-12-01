@@ -1,0 +1,11 @@
+- hosts: dotnet
+  become: true
+  tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Install dotnet
+      ansible.builtin.apt:
+        name: dotnet-sdk-6.0
+        state: present
