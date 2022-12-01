@@ -1,0 +1,9 @@
+[builders]
+maven ansible_host=....
+dotnet ansible_host=....
+
+[jenkins_server]
+jenkins_controller ansible_host=....
+
+[local]
+control ansible_connection=local
