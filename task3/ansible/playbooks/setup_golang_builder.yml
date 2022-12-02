@@ -1,0 +1,17 @@
+- hosts: golang
+  become: true
+  
+  tasks:
+    - name: Download Go archive
+      ansible.builtin.get_url:
+        url: "https://go.dev/dl/go1.19.3.linux-amd64.tar.gz"
+        dest: "/tmp/go1.19.3.linux-amd64.tar.gz"
+
+    - name: Extract archive
+      ansible.builtin.shell:
+        chdir: '/tmp'
+        cmd: 'rm -rf /usr/local/go && tar -C /usr/local -xzf go1.19.3.linux-amd64.tar.gz'
+
+    - name: Add binary to PATH
+      ansible.builtin.shell:
+        cmd: 'export PATH=$PATH:/usr/local/go/bin'
