@@ -1,0 +1,43 @@
+pipeline {
+    agent {
+        node {
+            label 'golang'
+        }
+    }
+
+    stages {
+        stage('Create hello_world project') {
+            steps {
+                sh 'go mod init example/hello'
+                writeFile file: 'hello.go', text:
+                    '''
+                    package main
+
+                    import "fmt"
+
+                    func main() {
+                    fmt.Println("Hello, World!")
+                    }
+                    '''
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'go build'
+            }
+        }
+
+        stage('Run') {
+            steps {
+                sh './hello'
+            }
+        }
+
+        stage('Clean up') {
+            steps {
+                cleanWs()
+            }
+        }
+    }
+}
