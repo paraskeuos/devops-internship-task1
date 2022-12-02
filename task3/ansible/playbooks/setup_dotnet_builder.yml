@@ -5,6 +5,11 @@
       ansible.builtin.apt:
         update_cache: true
 
+    - name: Install java
+      ansible.builtin.apt:
+        name: openjdk-11-jre
+        state: present
+        
     - name: Install dotnet
       ansible.builtin.apt:
         name: dotnet-sdk-6.0
