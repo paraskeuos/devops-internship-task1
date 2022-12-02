@@ -1,9 +1,10 @@
 [builders]
-maven ansible_host=....
-dotnet ansible_host=....
+maven ansible_host=35.170.243.145
+dotnet ansible_host=3.86.58.120
+golang ansible_host=44.203.116.27
 
 [jenkins_server]
-jenkins_controller ansible_host=....
+jenkins_controller ansible_host=18.234.208.80
 
 [local]
 control ansible_connection=local
