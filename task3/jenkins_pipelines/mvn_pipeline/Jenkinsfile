@@ -1,0 +1,33 @@
+pipeline {
+    agent {
+        node {
+            label 'maven'
+        }
+    }
+
+    stages {
+        stage('Clone repo') {
+            steps {
+                git 'https://github.com/paraskeuos/simple-java-maven-app.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn -B -DskipTests clean package'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+
+        stage('Clean up') {
+            steps {
+                cleanWs()
+            }
+        }
+    }
+}
