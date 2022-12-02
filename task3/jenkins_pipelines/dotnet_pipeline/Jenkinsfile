@@ -1,0 +1,29 @@
+pipeline {
+    agent {
+        node {
+            label 'dotnet'
+        }
+    }
+
+    stages {
+        stage('Clone repo') {
+            steps {
+                git 'https://github.com/paraskeuos/dotnet-hello-world.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('hello-world-api') {
+                    sh 'dotnet build'
+                }
+            }
+        }
+
+        stage('Clean up') {
+            steps {
+                cleanWs()
+            }
+        }
+    }
+}
