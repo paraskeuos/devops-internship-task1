@@ -1,17 +1,33 @@
 - hosts: golang
   become: true
-  
+  vars: {
+    go_archive: go1.19.3.linux-amd64.tar.gz
+  }
   tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Install java
+      ansible.builtin.apt:
+        name: openjdk-11-jre
+        state: present
+
     - name: Download Go archive
       ansible.builtin.get_url:
-        url: "https://go.dev/dl/go1.19.3.linux-amd64.tar.gz"
-        dest: "/tmp/go1.19.3.linux-amd64.tar.gz"
+        url: 'https://go.dev/dl/{{ go_archive }}'
+        dest: '/tmp/{{ go_archive }}'
 
     - name: Extract archive
       ansible.builtin.shell:
         chdir: '/tmp'
-        cmd: 'rm -rf /usr/local/go && tar -C /usr/local -xzf go1.19.3.linux-amd64.tar.gz'
+        cmd: 'rm -rf /usr/local/go && tar -C /usr/local -xzf {{ go_archive }}'
+
+    - name: Remove archive
+      ansible.builtin.file:
+        path: '/tmp/{{ go_archive }}'
+        state: absent
 
     - name: Add binary to PATH
       ansible.builtin.shell:
-        cmd: 'export PATH=$PATH:/usr/local/go/bin'
+        cmd: 'echo "export PATH=$PATH:/usr/local/go/bin" >> /etc/profile'
