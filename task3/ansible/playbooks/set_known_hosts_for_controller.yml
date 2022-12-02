@@ -17,6 +17,10 @@
       ansible.builtin.shell:
         cmd: 'ssh-keyscan {{ hostvars["dotnet"].ansible_host }} >> {{ jenkins_ssh_dir }}/known_hosts'
 
+    - name: Recognize dotnet builder as known host
+      ansible.builtin.shell:
+        cmd: 'ssh-keyscan {{ hostvars["golang"].ansible_host }} >> {{ jenkins_ssh_dir }}/known_hosts'
+
     - name: Give Jenkins ownership over .ssh
       ansible.builtin.shell:
         cmd: 'chown -R jenkins {{ jenkins_ssh_dir }}'
