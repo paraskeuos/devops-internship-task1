@@ -1,0 +1,27 @@
+pipeline {
+    agent {
+        node {
+            label 'react'
+        }
+    }
+
+    stages {
+        stage('Create project') {
+            steps {
+                sh 'npx create-react-app myapp'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('myapp') {
+                    sh 'npm run build'
+                }
+            }
+        }
+
+        stage('Clean up') {
+            cleanWs()
+        }
+    }
+}
