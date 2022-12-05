@@ -22,6 +22,7 @@ agent {
 # Docker containers as builder nodes
 
 Use an image with a running SSH server.
+Additionally, install required development tools.
 
 Create a user which Jenkins controller will use to connect with the node.
 For key pair login, add a public key to the user's .ssh/authorized_keys file.
@@ -31,3 +32,13 @@ If using known_hosts file verification, add the builder node to Jenkins .ssh/kno
 For the controller to connect with the node, use credentials created by adding the corresponding private key.
 
 See Docker files in the docker directories for more.
+
+Specify build agents by using labels. The controller will use the labeled node for executing the scripts.
+
+```
+agent {
+    node {
+        label 'maven'
+    }
+}
+```
