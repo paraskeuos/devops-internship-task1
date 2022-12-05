@@ -11,13 +11,13 @@ Docker group id inside the container should equal to the one of the host: <code>
 
 Use container agents in Jenkins script:
 
-'''
+```
 agent {
     docker {
         image 'name'
     }
 }
-'''
+```
 
 # Docker containers as builder nodes
 
