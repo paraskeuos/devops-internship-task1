@@ -1,0 +1,95 @@
+pipeline {
+    agent {
+        node {
+            label 'maven'
+        }
+    }
+
+    environment {
+        ACCESS_TOKEN = credentials('ARTIFACTORY_ACCESS_TOKEN')
+        DOCKER_IMG = 'hello-maven'
+        JFROG_SERVER = '10.0.0.15:8082'
+    }
+
+    stages {
+        stage('Clone repo') {
+            steps {
+                git 'https://github.com/paraskeuos/simple-java-maven-app.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn -B -DskipTests clean package'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+        
+        stage('Upload') {
+            parallel {
+                stage('Upload snapshot') {
+                    steps {
+                        dir('target') {
+                            sh '''jf rt upload \
+                                    --url http://${JFROG_SERVER}/artifactory \
+                                    --access-token ${ACCESS_TOKEN} \
+                                    my-app-1.0-SNAPSHOT.jar \
+                                    maven-local/hello-maven-SNAPSHOT-0.${BUILD_NUMBER}.jar'''
+                        }
+                    }
+                }
+                
+                stage('Upload docker image') {
+                    stages {
+                        stage('Build docker image') {
+                            steps {
+                                writeFile file: 'Dockerfile', text:
+                                '''
+                                FROM openjdk:11.0-jre
+        
+                                COPY target/my-app-1.0-SNAPSHOT.jar hello-maven.jar
+        
+                                CMD ["java", "-jar", "hello-maven.jar"]
+                                '''
+        
+                                sh 'docker build -t ${DOCKER_IMG} .'
+                                sh 'docker tag ${DOCKER_IMG} ${JFROG_SERVER}/docker-virtual/${DOCKER_IMG}:0.${BUILD_NUMBER}'
+                            }
+                        }
+        
+                        stage('Test docker image') {
+                            steps {
+                                sh 'docker run --name hello ${JFROG_SERVER}/docker-virtual/${DOCKER_IMG}:0.${BUILD_NUMBER}'
+                                sh 'docker rm hello'
+                            }
+                        }
+        
+                        stage('Push docker image') {
+                            steps {
+                                sh 'docker login -u jenkins -p ${ACCESS_TOKEN} ${JFROG_SERVER}/docker-virtual'
+                                sh 'docker push ${JFROG_SERVER}/docker-virtual/${DOCKER_IMG}:0.${BUILD_NUMBER}'
+                            }
+                        }
+        
+                        stage('Remove local docker image') {
+                            steps {
+                                sh 'docker rmi ${DOCKER_IMG} ${JFROG_SERVER}/docker-virtual/${DOCKER_IMG}:0.${BUILD_NUMBER}'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Clean up') {
+            steps {
+                cleanWs()
+            }
+        }
+    }
+}
