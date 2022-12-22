@@ -27,17 +27,17 @@
 
 - name: Download SonarQube
   ansible.builtin.shell:
-    chdir: /home/sonarqube
+    chdir: {{SQ_HOME}}
     cmd: "wget -O {{SQ_ZIP}} {{SQ_ZIP_URL}} && unzip {{SQ_ZIP}} && rm {{SQ_ZIP}}"
 
 - name: Configure SonarQube
   ansible.builtin.shell:
-    chdir: "home/sonarqube/{{SQ_DIR}}"
+    chdir: "{{SQ_HOME}}/{{SQ_WORKDIR}}"
     cmd: "sed -i 's/^#[ ]*sonar.jdbc.username/sonar.jdbc.username=sonarqube/' conf/sonar.properties && \
           sed -i 's/^#[ ]*sonar.jdbc.password/sonar.jdbc.password=sonarqube/' conf/sonar.properties && \
           sed -i 's/^#[ ]*sonar.web.host/sonar.web.host=10.0.0.55/' conf/sonar.properties"
 
 - name: Start SonarQube
   ansible.builtin.shell:
-    chdir: "home/sonarqube/{{SQ_DIR}}"
+    chdir: "{{SQ_HOME}}/{{SQ_WORKDIR}}"
     cmd: "./bin/linux-x86-64/sonar.sh start"
