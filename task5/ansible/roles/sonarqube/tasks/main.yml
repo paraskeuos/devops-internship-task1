@@ -1,11 +1,6 @@
 ---
 # tasks file for roles/sonarqube
 
-- name: Update apt cache
-  become: true
-  ansible.builtin.apt:
-    update_cache: true
-
 - name: Config vm and fs
   become: true
   ansible.builtin.copy:
@@ -23,6 +18,11 @@
   ansible.builtin.reboot:
     reboot_command: shutdown -r now
     test_command: whoami
+
+- name: Update apt cache
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
 
 - name: Install packages
   become: true
