@@ -20,6 +20,7 @@
     src: ../files/setup_db.sql
 
 - name: Run SQL script
+  become: true
   ansible.builtin.shell:
     chdir: /tmp
     cmd: "sudo -u postgres psql -f setup_db.sql && rm setup_db.sql"
@@ -27,14 +28,16 @@
 - name: Download SonarQube
   ansible.builtin.shell:
     chdir: /home/sonarqube
-    cmd: "wget {{SQ_ZIP_URL}} sonarqube.zip && unzip sonarqube && rm sonarqube.zip"
+    cmd: "wget -O {{SQ_ZIP}} {{SQ_ZIP_URL}} && unzip {{SQ_ZIP}} && rm {{SQ_ZIP}}"
 
 - name: Configure SonarQube
   ansible.builtin.shell:
-    cmd: "sed -i 's/^#[ ]*sonar.jdbc.username/sonar.jdbc.username=sonarqube/' sonarqube/conf/sonar.properties && \
-          sed -i 's/^#[ ]*sonar.jdbc.password/sonar.jdbc.password=sonarqube/' sonarqube/conf/sonar.properties && \
-          sed -i 's/^#[ ]*sonar.web.host/sonar.web.host=10.0.0.55/' sonarqube/conf/sonar.properties"
+    chdir: "home/sonarqube/{{SQ_DIR}}"
+    cmd: "sed -i 's/^#[ ]*sonar.jdbc.username/sonar.jdbc.username=sonarqube/' conf/sonar.properties && \
+          sed -i 's/^#[ ]*sonar.jdbc.password/sonar.jdbc.password=sonarqube/' conf/sonar.properties && \
+          sed -i 's/^#[ ]*sonar.web.host/sonar.web.host=10.0.0.55/' conf/sonar.properties"
 
 - name: Start SonarQube
   ansible.builtin.shell:
-    cmd: "./sonarqube/bin/linux-x86-64/sonar.sh start"
+    chdir: "home/sonarqube/{{SQ_DIR}}"
+    cmd: "./bin/linux-x86-64/sonar.sh start"

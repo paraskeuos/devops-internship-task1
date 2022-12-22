@@ -1,4 +1,6 @@
 ---
 # vars file for roles/sonarqube
 
-SQ_ZIP_URL = https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-8.9.10.61524.zip
+SQ_ZIP_URL: https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-8.9.10.61524.zip
+SQ_ZIP: SonarQube.zip
+SQ_DIR_NAME: SonarQube
