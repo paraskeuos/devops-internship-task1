@@ -6,6 +6,18 @@
   ansible.builtin.apt:
     update_cache: true
 
+- name: Config vm and fs
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/sysctl.d/99-sonarqube.conf
+    src: ../files/99-sonar-conf_1
+
+- name: Config allowed number of threads and file descriptors
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/security/limits.d/99-sonarqube.conf
+    src: ../files/99-sonar-conf_2
+
 - name: Install packages
   become: true
   ansible.builtin.apt:
