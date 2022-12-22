@@ -50,6 +50,8 @@ sonarqube   -   nofile   131072
 sonarqube   -   nproc    8192
 ```
 
+Reboot after making changes.
+
 ### Additional prerequisites
 
 Ensure Java is installed. SonarQube supports OpenJDK 11 for example.
