@@ -1,0 +1,36 @@
+pipeline {
+    agent {
+        node {
+            label 'maven'
+        }
+    }
+    
+    environment {
+        SQ_PROJECT = 'hello_world_manual'
+        SQ_URL = 'http://sonarqube:9000'
+        SQ_ACCESS_TOKEN = credentials('SONARQUBE_TOKEN')
+    }
+    
+    stages {
+        stage('Clone repo') {
+            steps {
+                git 'https://github.com/paraskeuos/simple-java-maven-app.git'
+            }
+        }
+        
+        stage('SonarQube verify') {
+            steps {
+                sh '''mvn clean verify sonar:sonar \
+                    -Dsonar.projectKey=${SQ_PROJECT} \
+                    -Dsonar.host.url=${SQ_URL} \
+                    -Dsonar.login=${SQ_ACCESS_TOKEN}'''
+            }
+        }
+
+        stage('Clean up') {
+            steps {
+                cleanWs()
+            }
+        }
+    }
+}
