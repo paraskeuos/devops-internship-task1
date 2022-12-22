@@ -18,6 +18,12 @@
     dest: /etc/security/limits.d/99-sonarqube.conf
     src: ../files/99-sonar-conf_2
 
+- name: Reboot
+  become: true
+  ansible.builtin.reboot:
+    reboot_command: shutdown -r now
+    test_command: whoami
+
 - name: Install packages
   become: true
   ansible.builtin.apt:
