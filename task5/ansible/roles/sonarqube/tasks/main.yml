@@ -27,7 +27,7 @@
 
 - name: Download SonarQube
   ansible.builtin.shell:
-    chdir: {{SQ_HOME}}
+    chdir: "{{SQ_HOME}}"
     cmd: "wget -O {{SQ_ZIP}} {{SQ_ZIP_URL}} && unzip {{SQ_ZIP}} && rm {{SQ_ZIP}}"
 
 - name: Configure SonarQube
