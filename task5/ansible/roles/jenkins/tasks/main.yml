@@ -15,6 +15,11 @@
   ansible.builtin.apt:
     update_cache: true
 
+- name: Install OpenJDK
+  ansible.builtin.apt:
+    name: openjdk-11-jre
+    state: present
+
 - name: Install jenkins
   ansible.builtin.apt:
     name: jenkins
