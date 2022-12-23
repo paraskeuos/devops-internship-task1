@@ -119,6 +119,6 @@ The following can be added to the <code>properties</code> section:
 <sonar.coverage.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.xmlReportPaths>
 ```
 
-Of special not is the last entry which tells SonarQube where to find the coverage report.
+Of special note is the last entry which tells SonarQube where to find the coverage report.
 
 
