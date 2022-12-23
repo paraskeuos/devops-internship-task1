@@ -1,0 +1,27 @@
+---
+# tasks file for roles/jenkins
+
+- name: Get jenkins apt key
+  ansible.builtin.apt_key:
+    url: 'https://pkg.jenkins.io/debian-stable/jenkins.io.key'
+    state: present
+
+- name: Ensure the repository is configured
+  ansible.builtin.apt_repository:
+    repo: 'deb https://pkg.jenkins.io/debian-stable binary/'
+    state: present
+
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: Install jenkins
+  ansible.builtin.apt:
+    name: jenkins
+    state: present
+
+- name: Start Jenkins as a service
+  ansible.builtin.service:
+    name: jenkins
+    enabled: true
+    state: started
