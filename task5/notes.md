@@ -81,4 +81,44 @@ The web server will by default run on localhost:9000. If needed, change the addr
 
 To run SonarQube, go back to the root of the unzipped directory, navigate to <code>bin/linux-x86-64</code> and run the command <code>./sonar.sh start</code>.
 
+## Adding JaCoCo coverage to Maven/SonarQube pipeline
+
+In the pom.xml file of the Maven project add the following JaCoCo plugin specification to the plugins section:
+```
+<plugin>
+    <groupId>org.jacoco</groupId>
+    <artifactId>jacoco-maven-plugin</artifactId>
+    <version>0.8.8</version>
+    <executions>
+        <execution>
+        <id>prepare-agent</id>
+        <goals>
+            <goal>prepare-agent</goal>
+        </goals>
+        </execution>
+        <execution>
+        <id>report</id>
+        <goals>
+            <goal>report</goal>
+        </goals>
+        </execution>
+    </executions>
+</plugin>
+```
+
+Under <code>executions</code>, the <code>prepare-agent</code> goal prepares the JaCoCo runtime for execution and the <code>report</code> goal generates reports based on the data provided by the agent. These two goals are the bare minimum.
+
+The following can be added to the <code>properties</code> section:
+```
+<!-- JaCoCo Properties -->
+<jacoco.version>0.8.8</jacoco.version>
+<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+<sonar.exclusions>pom.xml</sonar.exclusions>
+<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+<sonar.language>java</sonar.language>
+<sonar.coverage.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.xmlReportPaths>
+```
+
+Of special not is the last entry which tells SonarQube where to find the coverage report.
+
 
