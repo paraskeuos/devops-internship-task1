@@ -3,29 +3,28 @@ Vagrant.configure("2") do |config|
     config.vm.provider "virtualbox"
     config.vm.box = "ubuntu/focal64"
 
-    config.vm.network "public_network", bridge: "enps0s0", ip: "192.168.0.21"
+    config.vm.define "nexus" do |nexus|
 
-    config.vm.provider "virtualbox" do |vb|
-        vb.name = "nexus"
-        vb.memory = "4096"
+        nexus.vm.network "public_network", bridge: "enps0s0", ip: "192.168.0.21"
+
+        nexus.vm.provider "virtualbox" do |vb|
+            vb.name = "nexus"
+            vb.memory = "4096"
+        end
+
+        nexus.vm.provision "shell", path: "vagrant_setup_nexus.sh"
     end
 
-    config.vm.provision "shell", path: "vagrant_setup_nexus.sh"
+    config.vm.define "gitlab" do |gitlab|
 
-end
+        gitlab.vm.network "public_network", bridge: "enps0s0", ip: "192.168.0.22"
 
-Vagrant.configure.("2") do |config|
+        gitlab.vm.provider "virtualbox" do |vb|
+            vb.name = "gitlab"
+            vb.memory = "4096"
+        end
 
-    config.vm.provider "virtualbox"
-    config.vm.box = "ubuntu/focal64"
-
-    config.vm.network "public_network", bridge: "enps0s0", ip: "192.168.0.22"
-
-    config.vm.provider "virtualbox" do |vb|
-        vb.name = "gitlab"
-        vb.memory = "4096"
+        gitlab.vm.provision "shell", path: "vagrant_setup_gitlab.sh"
     end
-
-    config.vm.provision "shell", path: "vagrant_setup_gitlab.sh"
-
+    
 end
