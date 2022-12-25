@@ -1,0 +1,15 @@
+Vagrant.configure("2") do |config|
+
+    config.vm.provider "virtualbox"
+    config.vm.box = "ubuntu/focal64"
+
+    config.vm.network "public_network", bridge: "enp30s0", ip: "192.168.0.22"
+
+    config.vm.provider "virtualbox" do |vb|
+        vb.name = "gitlab"
+        vb.memory = "6144"
+    end
+
+    config.vm.provision "shell", path: "vagrant_setup_gitlab.sh"
+
+end
