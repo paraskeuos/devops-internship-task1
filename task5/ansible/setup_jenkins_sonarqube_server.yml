@@ -1,0 +1,6 @@
+- hosts: all
+  vars_files:
+    - vault/main.yml
+  roles:
+    - jenkins
+    - sonarqube

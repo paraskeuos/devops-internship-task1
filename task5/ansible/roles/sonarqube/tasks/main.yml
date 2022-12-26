@@ -34,15 +34,20 @@
       - postgresql-14
 
 - name: Copy setup_db.sql
-  ansible.builtin.copy:
+  ansible.builtin.template:
     dest: /tmp/setup_db.sql
-    src: ../files/setup_db.sql
+    src: ../templates/setup_db.sql.j2
 
 - name: Run SQL script
   become: true
   ansible.builtin.shell:
     chdir: /tmp
     cmd: "sudo -u postgres psql -f setup_db.sql && rm setup_db.sql"
+
+- name: Delete setup_db.sql
+  ansible.builtin.file:
+    path: /tmp/setup_db.sql
+    state: absent
 
 - name: Download SonarQube
   ansible.builtin.shell:
@@ -53,7 +58,7 @@
   ansible.builtin.shell:
     chdir: "{{SQ_HOME}}/{{SQ_WORKDIR}}"
     cmd: "sed -i 's/^#[ ]*sonar.jdbc.username=.*/sonar.jdbc.username=sonarqube/' conf/sonar.properties && \
-          sed -i 's/^#[ ]*sonar.jdbc.password=.*/sonar.jdbc.password=sonarqube/' conf/sonar.properties && \
+          sed -i 's/^#[ ]*sonar.jdbc.password=.*/sonar.jdbc.password={{sonarqube_db_password}}/' conf/sonar.properties && \
           sed -i 's/^#[ ]*sonar.web.host=.*/sonar.web.host={{ansible_host}}/' conf/sonar.properties"
 
 - name: Start SonarQube
