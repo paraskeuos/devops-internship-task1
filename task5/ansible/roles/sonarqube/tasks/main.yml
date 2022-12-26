@@ -59,7 +59,8 @@
     chdir: "{{SQ_HOME}}/{{SQ_WORKDIR}}"
     cmd: "sed -i 's/^#[ ]*sonar.jdbc.username=.*/sonar.jdbc.username=sonarqube/' conf/sonar.properties && \
           sed -i 's/^#[ ]*sonar.jdbc.password=.*/sonar.jdbc.password={{sonarqube_db_password}}/' conf/sonar.properties && \
-          sed -i 's/^#[ ]*sonar.web.host=.*/sonar.web.host={{ansible_host}}/' conf/sonar.properties"
+          sed -i 's/^#[ ]*sonar.web.host=.*/sonar.web.host={{ansible_host}}/' conf/sonar.properties && \
+          sed -i 's/^#[ ]*sonar.jdbc.url=jdbc:postgresql.*/sonar.jdbc.url=jdbc:postgresql://localhost/sonarqube' conf/sonar.properties"
 
 - name: Start SonarQube
   ansible.builtin.shell:
