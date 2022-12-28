@@ -9,4 +9,9 @@ chmod +x /usr/local/bin/gitlab-runner
 useradd --comment 'GitLab Runner' --create-home gitlab-runner --shell /bin/bash
 
 gitlab-runner install --user=gitlab-runner --working-directory=/home/gitlab-runner
-gitlab-runner start
+
+apt-get install docker.io
+usermod -aG docker gitlab-runner
+
+# gitlab-runner register <- starts interactive prompt for registering the runner at the GitLab server
+# gitlab-runner start    <- run under sudo privileges after registering
