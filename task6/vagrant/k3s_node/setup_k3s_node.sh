@@ -1,0 +1,6 @@
+#!/bin/bash
+
+SERVER_URL="https://192.168.0.55:6443"
+NODE_TOKEN="K1012c841821f944c4f537e0d3bd6ff3fb65d0f0b60bb10d8409a2f5157a25332e5::server:bf857c59a4a8cee98873aa636aaa136c"
+
+curl -sfL https://get.k3s.io | K3S_URL=$SERVER_URL K3S_TOKEN=$NODE_TOKEN sh -
