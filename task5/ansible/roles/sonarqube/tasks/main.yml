@@ -42,7 +42,7 @@
   become: true
   ansible.builtin.shell:
     chdir: /tmp
-    cmd: "sudo -u postgres psql -f setup_db.sql && rm setup_db.sql"
+    cmd: "sudo -u postgres psql -f setup_db.sql"
 
 - name: Delete setup_db.sql
   ansible.builtin.file:
