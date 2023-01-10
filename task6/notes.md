@@ -1,3 +1,47 @@
+## Infrastructure
+
+- 1 bare-metal Linux machine acting as Kubernetes control node
+- 1+ Linux VMs acting as worker nodes, installed with Vagrant (see the vagrant directory), using bridged connections to LAN (same as the control node)
+
+The idea is to test scaling deployments spanning multiple nodes.
+
+The simplest test deployment is specified in the nginx directory. It consists of one nginx deployment resource and a loadbalancer service accessible on port 30000 on every node that has running replicas of the deployment.
+
+We simulate a production environment where we don't public access to any nodes. Additionaly, the LoadBalancer service type limits us to use non-standard web ports.
+We deploy a reverse proxy VM running nginx/apache2 which redirects HTTP requests to worker nodes.
+
+If we run <code>curl -v http://proxy_ip</code>, where proxy_ip is the IP of the reverse proxy apache2 VM, we can see that the curl agent communicates directly to the nginx server replicas running in Kubernetes pods (see the Server response header) and there is no mention of worker node IP or port 30000:
+
+```
+*   Trying 192.168.0.22:80...
+* Connected to 192.168.0.22 (192.168.0.22) port 80 (#0)
+> GET / HTTP/1.1
+> Host: 192.168.0.22
+> User-Agent: curl/7.81.0
+> Accept: */*
+> 
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 200 OK
+< Date: Tue, 10 Jan 2023 15:14:44 GMT
+< Server: nginx/1.23.3
+< Content-Type: text/html
+< Content-Length: 615
+< Last-Modified: Tue, 13 Dec 2022 15:53:53 GMT
+< ETag: "6398a011-267"
+< Accept-Ranges: bytes
+< Vary: Accept-Encoding
+< 
+<!DOCTYPE html>
+<html>
+    ...
+</html>
+* Connection #0 to host 192.168.0.22 left intact
+```
+
+The idea of the mondodb/mongo-express stack is to test using various resource types of Kubernetes and add some complexity, such as having different deployments communicating between each other, using secrets, configmaps etc.
+
+We have pods running mongodb containers which use environment variable specified in the Secret resource, with internal mongodb-service associated with the deployment. ConfigMap is used as a link between mongodb-service and other resources that would want access to it, such as mongo-express. Finally, we deploy a LoadBalancer service as a link between clients and the mongo-express frontend.
+
 ## Installing K3S (lightweight Kubernetes)
 
 Run the following command on the server: <code>curl -sfL https://get.k3s.io | sh -</code>
