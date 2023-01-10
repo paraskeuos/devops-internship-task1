@@ -10,8 +10,8 @@ Worker nodes all need to have different names which can be specified using the <
 
 ## CLI - basic usage
 
-The CLI tool is <code>kubectl</code>. To list commands or get further explanation on them use the <code>help</code> argument.
-For example: <code>kubectl help</code>, <code>kubectl create help</code>.
+The CLI tool is <code>kubectl</code>. To list commands or get further explanation on them use the <code>-h</code> argument.
+For example: <code>kubectl -h</code>, <code>kubectl create -h</code>.
 
 The central CLI functions are CRUD commands that can be run against Kubernetes resources (nodes, pods, deployments, services etc).
 
