@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mongo-express-deployment
+  namespace: mongo
   labels:
     app: mongo-express
 spec:
@@ -31,13 +32,17 @@ spec:
                   name: mongodb-secret
                   key: mongodb-root-password
             - name: ME_CONFIG_MONGODB_SERVER
-              value: mongodb-service
+              valueFrom:
+                configMapKeyRef:
+                  name: mongodb-configmap
+                  key: db_url
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
   name: mongo-express-service
+  namespace: mongo
 spec:
   type: LoadBalancer
   selector:
@@ -46,4 +51,4 @@ spec:
     - protocol: TCP
       port: 8081
       targetPort: 8081
-      nodePort: 31000
+      nodePort: 30011
