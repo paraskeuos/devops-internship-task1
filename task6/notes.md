@@ -74,3 +74,11 @@ To enable the required modules run:
 sudo a2enmod proxy_http
 sudo a2enmod lbmethod_byrequests
 ```
+
+## Miscellaneous
+
+Data in the Secret resource should be base64 encoded, not in plaintext. If encoding using echo and base64 utilities (<code>echo -n "data" | base64</code>) make sure not to include the <code>-n</code> option as the echo command adds a trailing newline at the end of input by default.
+
+ConfigMap and the service referring to it should be in the same namespace.
+
+Should a container fail in launch, run <code>kubectl logs pod_name</code> for more details.
