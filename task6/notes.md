@@ -67,3 +67,10 @@ For apache2, this can be achieved with the code in the following snippet, with t
 ProxyPass "/"  "balancer://backend/"
 ProxyPassReverse "/"  "balancer://backend/"
 ```
+
+To enable the required modules run: 
+
+```
+sudo a2enmod proxy_http
+sudo a2enmod lbmethod_byrequests
+```
