@@ -38,14 +38,18 @@ To delete the resourced specified in the file, run <code>kubectl delete -f file.
 
 ## Reverse proxy using Nginx and Apache2
 
-When using nginx as a reverse proxy, to enable proxying to upstream server group edit the <code>/etc/nginx/sites-available/default</code> file:
+When using nginx as a reverse proxy, to enable proxying to upstream server group edit the <code>/etc/nginx/sites-available/default</code> file. The first snippet should stand outside the <code>server</code> block.
 
 ```
 upstream backend {
     server 192.168.0.21:30000;
     server 192.168.0.23:30000;
 }
+```
 
+This snippet goes inside the <code>server</code> block.
+
+```
 location / {
     # First attempt to serve request as file, then
     # as directory, then fall back to displaying a 404.

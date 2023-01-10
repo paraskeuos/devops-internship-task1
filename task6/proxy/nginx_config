@@ -18,6 +18,12 @@
 
 # Default server configuration
 #
+
+upstream backend {
+        server 192.168.0.21:30000;
+        server 192.168.0.23:30000;
+}
+
 server {
         listen 80 default_server;
         listen [::]:80 default_server;
@@ -44,11 +50,6 @@ server {
         index index.html index.htm index.nginx-debian.html;
 
         server_name _;
-
-        upstream backend {
-                server 192.168.0.21:30000;
-                server 192.168.0.23:30000;
-        }
 
         location / {
                 # First attempt to serve request as file, then
