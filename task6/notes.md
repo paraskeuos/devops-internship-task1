@@ -34,6 +34,8 @@ To display all nodes run <code>kubectl get nodes</code>. Mark the name of the co
 Resources such as deployments can be configured using yaml files which can look like the implicitly created nginx-deployment yaml configuration in the section above.
 Run <code>kubectl apply -f file.yml</code> to apply the desired configuration.
 
+To delete the resourced specified in the file, run <code>kubectl delete -f file.yml</code>.
+
 ## Reverse proxy using Nginx and Apache2
 
 When using nginx as a reverse proxy, to enable proxying to upstream server group edit the <code>/etc/nginx/sites-available/default</code> file:
@@ -55,7 +57,7 @@ location / {
 The <code>upstream</code> directive defines a server group called 'backend'. Redirection decisions will be based on the default Round Robin policy.
 Within the <code>location</code> block we specify the group name so that all '/' requests to the proxy server get redirected to one of the servers in the backend group.
 
-For apache2, this can be achieved with the code in the following snippet, with the exception that the 'byrequests' load balancing method will be used.
+For apache2, this can be achieved with the code in the following snippet, with the exception that the 'byrequests' load balancing method will be used, and the default configuration file is <code>/etc/apache2/sites-available/000-default.conf</code>.
 
 ```
 <Proxy balancer://backend/>
@@ -74,6 +76,8 @@ To enable the required modules run:
 sudo a2enmod proxy_http
 sudo a2enmod lbmethod_byrequests
 ```
+
+Restart the server after configuring.
 
 ## Miscellaneous
 
