@@ -44,7 +44,7 @@ metadata:
   name: mongo-express-service
   namespace: mongo
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
     app: mongo-express
   ports:
