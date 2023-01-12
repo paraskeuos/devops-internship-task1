@@ -1,0 +1,32 @@
+
+stages:
+  - build
+  - test
+  - deploy
+
+build:
+  stage: build
+  script:
+    - mvn -B -DskipTests clean package
+  artifacts:
+    paths:
+      - target/
+
+unit-test:
+  stage: test
+  script:
+    - mvn test
+
+deploy-jar:
+  stage: deploy
+  script:
+    - curl -v -u "gitlab:$NEXUS_PASS" --upload-file target/my-app-1.0-SNAPSHOT.jar "http://192.168.0.21:8081/repository/maven-snapshots/hello_world_v0.$CI_PIPELINE_IID.jar"
+
+deploy-docker-image:
+  stage: deploy
+  script:
+    - docker build -t hello-world-maven .
+    - docker tag hello-world-maven 192.168.0.21:10000/hello-world:0.$CI_PIPELINE_IID
+    - docker login -u gitlab -p $NEXUS_PASS http://192.168.0.21:10000
+    - docker push 192.168.0.21:10000/hello-world:0.$CI_PIPELINE_IID
+    - docker rmi 192.168.0.21:10000/hello-world:0.$CI_PIPELINE_IID hello-world-maven
